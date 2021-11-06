@@ -11,7 +11,7 @@ export default NextAuth({
     }),
   ],
   pages: {
-    signIn: nexturl + '/auth/signin',
+    signIn: `${process.env.NEXTAUTH_URL}/auth/signin`,
   },
   callbacks: {
     async session({ session, token, user }) {
