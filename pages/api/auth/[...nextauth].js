@@ -1,6 +1,8 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 
+const nexturl = process.env.NEXTAUTH_URL;
+
 export default NextAuth({
   providers: [
     GoogleProvider({
@@ -9,7 +11,7 @@ export default NextAuth({
     }),
   ],
   pages: {
-    signIn: '/auth/signin',
+    signIn: nexturl + '/auth/signin',
   },
   callbacks: {
     async session({ session, token, user }) {

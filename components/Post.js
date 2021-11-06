@@ -1,3 +1,5 @@
+// http://localhost:3000/api/auth/callback/google
+
 import {
   addDoc,
   collection,
@@ -94,7 +96,7 @@ function Post({ id, username, userImg, img, caption }) {
         <DotsHorizontalIcon className='h-5' />
       </div>
       {/* img */}
-      <img src={img} className='object-cover w-full' alt='photo' />
+      <img src={img} className='object-cover w-full' alt='' />
       {/* buttons */}
       {session && (
         <div className='flex justify-between px-4 pt-4'>
@@ -114,7 +116,7 @@ function Post({ id, username, userImg, img, caption }) {
         </div>
       )}
       {/* caption */}
-      <p className='p-5 truncate'>
+      <div className='p-5 truncate'>
         {likes.length > 0 && (
           <p className='font-bold mb-1'>
             {likes.length} {likes.length === 1 ? 'like' : 'likes'}
@@ -122,7 +124,7 @@ function Post({ id, username, userImg, img, caption }) {
         )}
         <span className='font-semibold mr-1'>{username}</span>
         {caption}
-      </p>
+      </div>
       {/* comments */}
       {comments.length > 0 && (
         <div className='ml-10 h-20 overflow-y-scroll scrollbar-thumb-black scrollbar-thin'>

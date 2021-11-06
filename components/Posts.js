@@ -3,25 +3,6 @@ import { useEffect, useState } from 'react';
 import { db } from '../firebase';
 import Post from './Post';
 
-// const posts = [
-//   {
-//     id: '123',
-//     username: 'ssssangha',
-//     userImg: 'https://links.papareact.com/3ke',
-//     img: 'https://links.papareact.com/3ke',
-//     caption:
-//       'This is dope but I need the caption to be longer to show css property truncate',
-//   },
-//   {
-//     id: '1234',
-//     username: 'ssssangha',
-//     userImg: 'https://links.papareact.com/3ke',
-//     img: 'https://links.papareact.com/3ke',
-//     caption:
-//       'This is dope but I need the caption to be longer to show css property truncate',
-//   },
-// ];
-
 function Posts() {
   const [posts, setPosts] = useState([]);
 
@@ -35,7 +16,7 @@ function Posts() {
       ),
     [db]
   );
-  console.log(posts);
+
   return (
     <div>
       {posts.map((post) => (

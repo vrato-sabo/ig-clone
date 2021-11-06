@@ -1,6 +1,8 @@
 import { getProviders, signIn } from 'next-auth/react';
 import Header from '../../components/Header';
 
+const nexturl = process.env.NEXTAUTH_URL;
+
 // Browser...
 function signin({ providers }) {
   return (
@@ -17,7 +19,7 @@ function signin({ providers }) {
               <button
                 className='p-3 bg-blue-500 rounded-lg text-white'
                 onClick={() =>
-                  signIn(provider.id, { callbackUrl: 'http://localhost:3000' })
+                  signIn(provider.id, { callbackUrl: `${nexturl}` })
                 }>
                 Sign in with {provider.name}
               </button>
