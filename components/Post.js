@@ -21,7 +21,7 @@ import {
 } from '@heroicons/react/outline';
 import { HeartIcon as HeartIconFilled } from '@heroicons/react/solid';
 import { useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { db } from '../firebase';
 // import Moment from 'react-moment';
 
@@ -31,6 +31,7 @@ function Post({ id, username, userImg, img, caption }) {
   const [comments, setComments] = useState([]);
   const [likes, setLikes] = useState([]);
   const [hasLiked, setHasLiked] = useState(false);
+  const inputRef = useRef();
 
   useEffect(
     () =>
@@ -96,7 +97,12 @@ function Post({ id, username, userImg, img, caption }) {
         <DotsHorizontalIcon className='h-5' />
       </div>
       {/* img */}
-      <img src={img} className='object-cover w-full' alt='' />
+      <img
+        onDoubleClick={likePost}
+        src={img}
+        className='object-cover w-full'
+        alt=''
+      />
       {/* buttons */}
       {session && (
         <div className='flex justify-between px-4 pt-4'>
@@ -109,8 +115,11 @@ function Post({ id, username, userImg, img, caption }) {
             ) : (
               <HeartIcon onClick={likePost} className='btn' />
             )}
-            <ChatIcon className='btn' />
-            <PaperAirplaneIcon className='btn' />
+            <ChatIcon
+              onClick={() => inputRef.current.focus()}
+              className='btn'
+            />
+            <PaperAirplaneIcon className='btn rotate-45' />
           </div>
           <BookmarkIcon className='btn' />
         </div>
@@ -154,6 +163,7 @@ function Post({ id, username, userImg, img, caption }) {
           <EmojiHappyIcon className='h-7' />
           <input
             value={comment}
+            ref={inputRef}
             onChange={(e) => setComment(e.target.value)}
             className='border-none flex-1 focus:ring-0'
             placeholder='Add a comment...'
