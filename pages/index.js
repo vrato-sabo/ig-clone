@@ -10,11 +10,8 @@ export default function Home() {
         <title>IG-clone</title>
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      {/* Header */}
       <Header />
-      {/* Feed */}
       <Feed />
-      {/* Modal */}
       <Modal />
     </div>
   );

@@ -97,12 +97,16 @@ function Post({ id, username, userImg, img, caption }) {
         <DotsHorizontalIcon className='h-5' />
       </div>
       {/* img */}
-      <img
-        onDoubleClick={likePost}
-        src={img}
-        className='object-cover w-full'
-        alt=''
-      />
+      {session ? (
+        <img
+          onDoubleClick={likePost}
+          src={img}
+          className='object-cover w-full'
+          alt=''
+        />
+      ) : (
+        <img src={img} className='object-cover w-full' alt='' />
+      )}
       {/* buttons */}
       {session && (
         <div className='flex justify-between px-4 pt-4'>
