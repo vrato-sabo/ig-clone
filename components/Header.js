@@ -18,7 +18,6 @@ function Header() {
   const { data: session } = useSession();
   const [open, setOpen] = useRecoilState(modalState);
   const router = useRouter();
-  // console.log(session);
   return (
     <div className='sticky top-0 z-50 shadow-sm border-b bg-white'>
       <div className='flex justify-between max-w-6xl mx-5 lg:mx-auto'>
@@ -44,7 +43,7 @@ function Header() {
           />
         </div>
         {/* Middle */}
-        <div className='max-w-xs'>
+        <div className='max-w-xs hidden xs:block '>
           <div className=' mt-1 relative p-3 rounded-md'>
             <div className='absolute inset-y-0 pl-3 flex items-center pointer-events-none'>
               <SearchIcon className='h-5 w-5 text-gray-500' />
@@ -68,7 +67,10 @@ function Header() {
                   3
                 </div>
               </div>
-              <PlusCircleIcon onClick={() => setOpen(true)} className='icon' />
+              <PlusCircleIcon
+                onClick={() => setOpen(true)}
+                className='h-6 md:inline-flex cursor-pointer hover:scale-125 transition-all duration-150 ease-out'
+              />
               <UserGroupIcon className='icon' />
               <HeartIcon className='icon' />
               <img
