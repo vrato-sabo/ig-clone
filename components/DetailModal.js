@@ -1,22 +1,34 @@
 import { useRecoilState } from 'recoil';
-import { detailModalState, modalState } from '../atoms/modalAtom';
+import { detailModalState, idState, usernameState } from '../atoms/modalAtom';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useRef, useState } from 'react';
-import { CameraIcon } from '@heroicons/react/outline';
-import { db, storage } from '../firebase';
-import {
-  addDoc,
-  collection,
-  doc,
-  serverTimestamp,
-  updateDoc,
-} from '@firebase/firestore';
 import { useSession } from 'next-auth/react';
-import { ref, getDownloadURL, uploadString } from '@firebase/storage';
+import { deleteDoc, doc } from '@firebase/firestore';
+import { db } from '../firebase';
 
-function Modal() {
+function DetailModal() {
   const { data: session } = useSession();
   const [showModal, setShowModal] = useRecoilState(detailModalState);
+  const [usernameForDelete, setUsernameForDelete] =
+    useRecoilState(usernameState);
+  const [idForDelete, setIdForDelete] = useRecoilState(idState);
+
+  const showDeleteButton = session?.user?.username === usernameForDelete;
+  console.log(showDeleteButton, 'showdeletebutton');
+
+  console.log(usernameForDelete, 'user Name for delete');
+
+  const deletePost = async (e) => {
+    e.preventDefault();
+
+    if (session?.user?.username === usernameForDelete) {
+      await deleteDoc(doc(db, 'posts', idForDelete));
+    }
+    setUsernameForDelete(null);
+    setShowModal(false);
+  };
+
+  if (!session) return null;
 
   return (
     <Transition.Root show={showModal} as={Fragment}>
@@ -49,60 +61,34 @@ function Modal() {
             leave='ease-in duration-200'
             leaveFrom='opacity-100 translate-y-0 sm:scale-100'
             leaveTo='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'>
-            <div className='inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full'>
-              <div>
-                {selectedFile ? (
-                  <img
-                    src={selectedFile}
-                    className='w-full object-contain cursor-pointer'
-                    onClick={() => setSelectedFile(null)}
-                    alt='pic'
-                  />
-                ) : (
-                  <div
-                    onClick={() => filePickerRef.current.click()}
-                    className='mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 cursor-pointer'>
-                    <CameraIcon
-                      className='h-6 w-6 text-red-600'
-                      aria-hidden='true'
-                    />
-                  </div>
-                )}
-
-                <div>
-                  <div className='mt-3 text-center sm:mt-5'>
-                    <Dialog.Title
-                      as='h3'
-                      className='text-lg leading-6 font-medium text-gray-900'>
-                      Upload a photo
-                    </Dialog.Title>
-                    <div>
-                      <input
-                        ref={filePickerRef}
-                        onChange={addImageToPost}
-                        type='file'
-                        hidden
-                      />
-                    </div>
-                    <div className='mt-2'>
-                      <input
-                        className='border-none focus:ring-0 w-full text-center'
-                        type='text'
-                        ref={captionRef}
-                        placeholder='Please enter a caption'
-                      />
-                    </div>
-                  </div>
+            <div className='inline-block align-bottom bg-white rounded-lg text-center shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full'>
+              <div className='w-full cursor-not-allowed font-semibold py-2 border-b text-red-600'>
+                Report
+              </div>
+              <div className='w-full cursor-not-allowed font-semibold py-2 border text-red-600'>
+                Unfollow
+              </div>
+              {showDeleteButton && (
+                <div
+                  onClick={session ? deletePost : null}
+                  className='w-full cursor-pointer font-semibold py-2 border text-red-600'>
+                  Delete Post
                 </div>
-                <div className='mt-5 sm:mt-6'>
-                  <button
-                    disabled={!selectedFile}
-                    onClick={uploadPost}
-                    type='button'
-                    className='inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-red-500 sm:text-sm disabled:bg-gray-300 disabled:cursor-not-allowed disabled:hover:bg-gray-300'>
-                    {loading ? 'Uploading...' : 'Upload Post'}
-                  </button>
-                </div>
+              )}
+              <div className='w-full cursor-not-allowed py-2 border'>
+                Go to post
+              </div>
+              <div className='w-full cursor-not-allowed py-2 border'>
+                Share to...
+              </div>
+              <div className='w-full cursor-not-allowed py-2 border'>
+                Copy Link
+              </div>
+              <div className='w-full cursor-not-allowed py-2 border'>Embed</div>
+              <div
+                onClick={() => setShowModal(false)}
+                className='py-2 cursor-pointer'>
+                Cancel
               </div>
             </div>
           </Transition.Child>
@@ -112,4 +98,4 @@ function Modal() {
   );
 }
 
-export default Modal;
+export default DetailModal;

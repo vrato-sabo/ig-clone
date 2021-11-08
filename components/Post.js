@@ -22,6 +22,8 @@ import { useSession } from 'next-auth/react';
 import { useEffect, useRef, useState } from 'react';
 import { db } from '../firebase';
 import Moment from 'react-moment';
+import { detailModalState, idState, usernameState } from '../atoms/modalAtom';
+import { useRecoilState } from 'recoil';
 
 function Post({ id, username, userImg, img, caption }) {
   const { data: session } = useSession();
@@ -31,6 +33,10 @@ function Post({ id, username, userImg, img, caption }) {
   const [hasLiked, setHasLiked] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const inputRef = useRef();
+  const [show, setShow] = useRecoilState(detailModalState);
+  const [usernameForDelete, setUsernameForDelete] =
+    useRecoilState(usernameState);
+  const [idForDelete, setIdForDelete] = useRecoilState(idState);
 
   useEffect(
     () =>
@@ -84,17 +90,15 @@ function Post({ id, username, userImg, img, caption }) {
     });
   };
 
-  const deletePost = async (e) => {
+  const dotsClickHandler = (e) => {
     e.preventDefault();
-
-    if (session?.user?.username === username) {
-      await deleteDoc(doc(db, 'posts', id));
-    }
+    setUsernameForDelete(username);
+    setShow(true);
+    setIdForDelete(id);
   };
 
   const showDelteButton = session?.user?.username === username;
 
-  // console.log(session?.user?.username, username);
   return (
     <div className='bg-white my-7 border rounded-sm'>
       {/* Header */}
@@ -106,39 +110,9 @@ function Post({ id, username, userImg, img, caption }) {
         />
         <p className='flex-1 font-semibold'>{username}</p>
         <DotsHorizontalIcon
-          onClick={() => setDeleteModal(true)}
+          onClick={dotsClickHandler}
           className='h-5 cursor-pointer'
         />
-        {deleteModal && session && (
-          <div
-            onClick={() => setDeleteModal(false)}
-            className='absolute top-80 left-1/3'>
-            <div className='text-center relative text-base py-1 bg-gray-100 w-96 rounded-xl scrollbar-none'>
-              <button className='w-full font-semibold py-2 border-b text-red-600'>
-                Report
-              </button>
-              <button className='w-full font-semibold py-2 border text-red-600'>
-                Unfollow
-              </button>
-              {showDelteButton && (
-                <button
-                  onClick={session ? deletePost : null}
-                  className='w-full font-semibold py-2 border text-red-600'>
-                  Delete Post
-                </button>
-              )}
-              <button className='w-full py-2 border'>Go to post</button>
-              <button className='w-full py-2 border'>Share to...</button>
-              <button className='w-full py-2 border'>Copy Link</button>
-              <button className='w-full py-2 border'>Embed</button>
-              <button
-                onClick={() => setDeleteModal(false)}
-                className='py-2 border-t'>
-                Cancel
-              </button>
-            </div>
-          </div>
-        )}
       </div>
       {/* img */}
       {session ? (
