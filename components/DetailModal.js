@@ -1,5 +1,5 @@
 import { useRecoilState } from 'recoil';
-import { modalState } from '../atoms/modalAtom';
+import { detailModalState, modalState } from '../atoms/modalAtom';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useRef, useState } from 'react';
 import { CameraIcon } from '@heroicons/react/outline';
@@ -16,60 +16,14 @@ import { ref, getDownloadURL, uploadString } from '@firebase/storage';
 
 function Modal() {
   const { data: session } = useSession();
-  const [open, setOpen] = useRecoilState(modalState);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const filePickerRef = useRef(null);
-  const captionRef = useRef(null);
-
-  const uploadPost = async () => {
-    if (loading) return;
-
-    setLoading(true);
-
-    // create a post and add to firestore posts collection
-    // get the post ID for the newliy created post
-    // upload img to firebase storage with post ID
-    // get a download url from fb storage and update the original post with image
-
-    const docRef = await addDoc(collection(db, 'posts'), {
-      username: session.user.username,
-      caption: captionRef.current.value,
-      profileImg: session.user.image,
-      timeStamp: serverTimestamp(),
-    });
-
-    const imageRef = ref(storage, `posts/${docRef.id}/image`);
-
-    await uploadString(imageRef, selectedFile, 'data_url').then(
-      async (snapshot) => {
-        const downloadUrl = await getDownloadURL(imageRef);
-        await updateDoc(doc(db, 'posts', docRef.id), {
-          image: downloadUrl,
-        });
-      }
-    );
-    setOpen(false);
-    setLoading(false);
-    setSelectedFile(null);
-  };
-
-  const addImageToPost = (e) => {
-    const reader = new FileReader();
-    if (e.target.files[0]) {
-      reader.readAsDataURL(e.target.files[0]);
-    }
-    reader.onload = (readerEvent) => {
-      setSelectedFile(readerEvent.target.result);
-    };
-  };
+  const [showModal, setShowModal] = useRecoilState(detailModalState);
 
   return (
-    <Transition.Root show={open} as={Fragment}>
+    <Transition.Root show={showModal} as={Fragment}>
       <Dialog
         as='div'
         className='fixed z-10 inset-0 overflow-y-auto'
-        onClose={setOpen}>
+        onClose={setShowModal}>
         <div className='flex items-end justify-center min-h-[800px] sm:min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0'>
           <Transition.Child
             as={Fragment}
