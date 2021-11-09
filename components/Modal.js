@@ -126,6 +126,7 @@ function Modal() {
                       <input
                         ref={filePickerRef}
                         onChange={addImageToPost}
+                        accept='image/png, image/jpg, image/jpeg'
                         type='file'
                         hidden
                       />
