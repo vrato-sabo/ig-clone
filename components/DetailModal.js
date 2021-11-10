@@ -14,9 +14,6 @@ function DetailModal() {
   const [idForDelete, setIdForDelete] = useRecoilState(idState);
 
   const showDeleteButton = session?.user?.username === usernameForDelete;
-  console.log(showDeleteButton, 'showdeletebutton');
-
-  console.log(usernameForDelete, 'user Name for delete');
 
   const deletePost = async (e) => {
     e.preventDefault();
