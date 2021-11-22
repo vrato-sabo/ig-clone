@@ -63,8 +63,12 @@ export default DirectMessages;
 export async function getServerSideProps(context) {
   const session = await getSession(context);
   if (!session) {
-    context.res.writeHead(302, { Location: '/' });
-    return null;
+    context.res.writeHead(302, { Location:  process.env.NEXTAUTH_URL});
+    return {
+      props: {
+        user: null,
+      },
+    };
   }
   return {
     props: {
