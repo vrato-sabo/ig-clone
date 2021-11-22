@@ -19,11 +19,14 @@ function Modal() {
   const [open, setOpen] = useRecoilState(modalState);
   const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [wrongFile, setWrongFile] = useState(false);
   const filePickerRef = useRef(null);
   const captionRef = useRef(null);
 
   const uploadPost = async () => {
     if (loading) return;
+
+    console.log(filePickerRef.current.value, 'log from upload post');
 
     setLoading(true);
 
@@ -55,13 +58,19 @@ function Modal() {
   };
 
   const addImageToPost = (e) => {
-    const reader = new FileReader();
-    if (e.target.files[0]) {
-      reader.readAsDataURL(e.target.files[0]);
+    if (!e.target.files[0].type.includes('image')) {
+      setWrongFile(true);
+      return;
+    } else {
+      const reader = new FileReader();
+      if (e.target.files[0]) {
+        reader.readAsDataURL(e.target.files[0]);
+      }
+      reader.onload = (readerEvent) => {
+        setSelectedFile(readerEvent.target.result);
+      };
+      setWrongFile(false);
     }
-    reader.onload = (readerEvent) => {
-      setSelectedFile(readerEvent.target.result);
-    };
   };
 
   return (
@@ -120,13 +129,15 @@ function Modal() {
                     <Dialog.Title
                       as='h3'
                       className='text-lg leading-6 font-medium text-gray-900'>
-                      Upload a photo
+                      {!wrongFile
+                        ? 'Upload a photo'
+                        : 'Unsupported file type, please upload a photo'}
                     </Dialog.Title>
                     <div>
                       <input
                         ref={filePickerRef}
                         onChange={addImageToPost}
-                        accept='image/png, image/jpg, image/jpeg'
+                        accept='image/* videos/*'
                         type='file'
                         hidden
                       />

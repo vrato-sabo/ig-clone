@@ -14,7 +14,7 @@ export default NextAuth({
     signIn: `${process.env.NEXTAUTH_URL}/auth/signin`,
   },
   callbacks: {
-    async session({ session, token, user }) {
+    async session({ session, token }) {
       session.user.username = session.user.name
         .split(' ')
         .join('')
@@ -22,5 +22,11 @@ export default NextAuth({
       session.user.uid = token.sub;
       return session;
     },
+    // redirect: async (url, _baseUrl) => {
+    //   if (url === 'direct-message') {
+    //     return Promise.resolve('/');
+    //   }
+    //   return Promise.resolve('/');
+    // },
   },
 });

@@ -5,26 +5,48 @@ import {
   UserGroupIcon,
   HeartIcon,
   PaperAirplaneIcon,
-  MenuIcon,
+  HomeIcon,
 } from '@heroicons/react/outline';
-import { HomeIcon } from '@heroicons/react/solid';
+import {
+  HomeIcon as SolidHomeIcon,
+  PaperAirplaneIcon as SolidPaperAirPlaneIcon,
+} from '@heroicons/react/solid';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { Fragment } from 'react';
 import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
-import { modalState } from '../atoms/modalAtom';
+import { modalState, selectedUserState } from '../atoms/modalAtom';
+import { doc, updateDoc } from '@firebase/firestore';
+import { db } from '../firebase';
 
-function Header() {
+function Header({ notifications, user1 }) {
   const { data: session } = useSession();
   const [open, setOpen] = useRecoilState(modalState);
+  const [selectedChat, setSelectedChat] = useRecoilState(selectedUserState);
   const router = useRouter();
+
+  const test = notifications?.filter(
+    (notification) => notification.to === user1
+  );
+
+  const filteredNotification = notifications?.filter(
+    (notification) => notification.to === user1
+  ).length;
+
+  const signOutHandler = async (e) => {
+    e.preventDefault();
+    await updateDoc(doc(db, 'users', session.user.uid), {
+      isOnline: false,
+    });
+    signOut();
+  };
   return (
     <div className='sticky top-0 z-50 shadow-sm border-b bg-white'>
       <div className='flex justify-between max-w-6xl mx-5 lg:mx-auto'>
         {/* Left */}
         <div
           onClick={() => router.push('/')}
-          className='relative hidden w-24 lg:inline-grid'>
+          className='relative hidden w-24 lg:inline-grid cursor-pointer'>
           <Image
             src='https://links.papareact.com/ocw'
             alt='logo'
@@ -57,15 +79,28 @@ function Header() {
         </div>
         {/* Right */}
         <div className='flex items-center justify-end space-x-4'>
-          <HomeIcon onClick={() => router.push('/')} className='icon' />
-          <MenuIcon className='h-6 md:hidden cursor-pointer' />
+          {router.pathname === '/' ? (
+            <SolidHomeIcon onClick={() => router.push('/')} className='icon' />
+          ) : (
+            <HomeIcon onClick={() => router.push('/')} className='icon' />
+          )}
           {session ? (
             <Fragment>
-              <div className='relative icon'>
-                <PaperAirplaneIcon className='icon rotate-45' />
-                <div className='absolute -top-1 -right-2 text-xs w-5 h-5 rounded-full bg-red-500 flex items-center justify-center text-white'>
-                  3
-                </div>
+              <div
+                onClick={() => router.push('/direct-messages')}
+                className='relative'>
+                {router.pathname === '/direct-messages' ? (
+                  <SolidPaperAirPlaneIcon className='h-6 cursor-pointer rotate-[55deg] hover:scale-125 transition-all duration-150 ease-out' />
+                ) : (
+                  <PaperAirplaneIcon className='h-6 cursor-pointer rotate-[55deg] hover:scale-125 transition-all duration-150 ease-out' />
+                )}
+                {filteredNotification !== 0 &&
+                test[0]?.to !== selectedChat?.uid &&
+                test[0]?.from !== selectedChat?.uid ? (
+                  <div className='absolute -top-1 -right-2 text-xs w-5 h-5 rounded-full bg-red-500 flex items-center justify-center text-white'>
+                    {filteredNotification}
+                  </div>
+                ) : null}
               </div>
               <PlusCircleIcon
                 onClick={() => setOpen(true)}
@@ -74,7 +109,7 @@ function Header() {
               <UserGroupIcon className='icon' />
               <HeartIcon className='icon' />
               <img
-                onClick={signOut}
+                onClick={signOutHandler}
                 src={session?.user?.image}
                 alt='pic'
                 className='h-10 w-10 rounded-full cursor-pointer'

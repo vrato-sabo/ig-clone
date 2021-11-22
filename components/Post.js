@@ -24,6 +24,7 @@ import { db } from '../firebase';
 import Moment from 'react-moment';
 import { detailModalState, idState, usernameState } from '../atoms/modalAtom';
 import { useRecoilState } from 'recoil';
+import EmojiPicker from './dms/EmojiPicker';
 
 function Post({ id, username, userImg, img, caption }) {
   const { data: session } = useSession();
@@ -37,6 +38,8 @@ function Post({ id, username, userImg, img, caption }) {
   const [usernameForDelete, setUsernameForDelete] =
     useRecoilState(usernameState);
   const [idForDelete, setIdForDelete] = useRecoilState(idState);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [emoji, setEmoji] = useState('');
 
   useEffect(
     () =>
@@ -80,6 +83,7 @@ function Post({ id, username, userImg, img, caption }) {
     e.preventDefault();
 
     const commentToSend = comment;
+
     setComment('');
 
     await addDoc(collection(db, 'posts', id, 'comments'), {
@@ -88,6 +92,8 @@ function Post({ id, username, userImg, img, caption }) {
       userImage: session.user.image,
       timeStamp: serverTimestamp(),
     });
+    setEmoji('');
+    setShowEmojiPicker(false);
   };
 
   const dotsClickHandler = (e) => {
@@ -97,7 +103,10 @@ function Post({ id, username, userImg, img, caption }) {
     setIdForDelete(id);
   };
 
-  const showDelteButton = session?.user?.username === username;
+  const addToComment = (emoji) => {
+    setEmoji(emoji);
+    setComment(comment + emoji);
+  };
 
   return (
     <div className='bg-white my-7 border rounded-sm'>
@@ -181,24 +190,34 @@ function Post({ id, username, userImg, img, caption }) {
       )}
       {/* input box */}
       {session && (
-        <form className='flex items-center p-4'>
-          <EmojiHappyIcon className='h-7' />
-          <input
-            value={comment}
-            ref={inputRef}
-            onChange={(e) => setComment(e.target.value)}
-            className='border-none flex-1 focus:ring-0'
-            placeholder='Add a comment...'
-            type='text'
-          />
-          <button
-            disabled={!comment.trim()}
-            onClick={sendComment}
-            type='submit'
-            className='font-semibold text-blue-400'>
-            Post
-          </button>
-        </form>
+        <>
+          {showEmojiPicker && (
+            <EmojiPicker
+              handler={(e) => addToComment(e.currentTarget.innerHTML)}
+            />
+          )}
+          <form className='flex items-center p-4'>
+            <EmojiHappyIcon
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+              className='h-7 cursor-pointer'
+            />
+            <input
+              value={comment}
+              ref={inputRef}
+              onChange={(e) => setComment(e.target.value)}
+              className='border-none flex-1 focus:ring-0'
+              placeholder='Add a comment...'
+              type='text'
+            />
+            <button
+              disabled={!comment.trim()}
+              onClick={sendComment}
+              type='submit'
+              className='font-semibold text-blue-400'>
+              Post
+            </button>
+          </form>
+        </>
       )}
     </div>
   );

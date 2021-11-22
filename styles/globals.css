@@ -9,3 +9,101 @@
 .btn {
   @apply h-7 hover:scale-125 cursor-pointer transition-all duration-150 ease-out;
 }
+.chat-icon {
+  @apply h-8 relative cursor-pointer px-3;
+}
+
+.radio {
+  @apply flex items-center cursor-pointer mr-8;
+}
+
+.radio-input {
+  @apply hidden;
+}
+
+.radio-radio {
+  @apply w-5 h-5 border-black rounded-full mr-3 box-border;
+}
+
+.radio-radio::after {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: rgb(59, 130, 246);
+  border: 2px rgb(59, 130, 246);
+  outline: none;
+}
+
+.radio-radio-inactive {
+  @apply w-5 h-5 border-black border rounded-full mr-3 box-border;
+}
+
+.checkbox {
+  @apply flex justify-between py-1 items-center cursor-pointer mr-8 uppercase font-semibold;
+}
+
+.checkbox-input {
+  @apply hidden;
+}
+
+.checkbox-checkbox {
+  @apply w-6 h-6 border-black border-0.5 mr-3 box-border relative;
+}
+
+.checkbox-checkbox::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 15px;
+  border-right: 1.5px solid gray;
+  border-bottom: 1.5px solid gray;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotateZ(40deg);
+}
+
+.checkbox-checkbox-inactive {
+  @apply w-6 h-6 border-black border-0.5 mr-3 box-border p-0.3;
+}
+
+/* checkbox tutorial */
+
+.checkbox-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.checkmark {
+  display: block;
+  border: 1px solid black;
+  width: 24px;
+  height: 24px;
+  background-color: white;
+  position: relative;
+}
+
+.checkmark::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 15px;
+  border-right: 1.5px solid gray;
+  border-bottom: 1.5px solid gray;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotateZ(40deg);
+}
+
+.resize {
+  width: 320px;
+  height: auto;
+}
+
+.resize {
+  width: 240px;
+  height: auto;
+}
