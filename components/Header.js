@@ -18,6 +18,8 @@ import { useRecoilState } from 'recoil';
 import { modalState, selectedUserState } from '../atoms/modalAtom';
 import { doc, updateDoc } from '@firebase/firestore';
 import { db } from '../firebase';
+import textLogo from '../public/img/ig-logo-text.png';
+import logo from '../public/img/ig-logo.png';
 
 function Header({ notifications, user1 }) {
   const { data: session } = useSession();
@@ -40,29 +42,20 @@ function Header({ notifications, user1 }) {
     });
     signOut();
   };
+
   return (
     <div className='sticky top-0 z-50 shadow-sm border-b bg-white'>
       <div className='flex justify-between max-w-6xl mx-5 lg:mx-auto'>
         {/* Left */}
         <div
           onClick={() => router.push('/')}
-          className='relative hidden w-24 lg:inline-grid cursor-pointer'>
-          <Image
-            src='https://links.papareact.com/ocw'
-            alt='logo'
-            layout='fill'
-            objectFit='contain'
-          />
+          className='relative hidden w-24 ml-4 lg:inline-grid cursor-pointer'>
+          <Image src={textLogo} alt='logo' layout='fill' objectFit='contain' />
         </div>
         <div
           onClick={() => router.push('/')}
           className=' w-10 relative lg:hidden flex-shrink-0 cursor-pointer'>
-          <Image
-            src='https://links.papareact.com/jjm'
-            alt='logo'
-            layout='fill'
-            objectFit='contain'
-          />
+          <Image src={logo} alt='logo' layout='fill' objectFit='contain' />
         </div>
         {/* Middle */}
         <div className='max-w-xs hidden xs:block '>

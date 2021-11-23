@@ -1,17 +1,7 @@
-import {
-  doc,
-  getDoc,
-  onSnapshot,
-  setDoc,
-  updateDoc,
-} from '@firebase/firestore';
+import { doc, getDoc, onSnapshot, updateDoc } from '@firebase/firestore';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import {
-  dataState,
-  messageNotificationState,
-  selectedUserState,
-} from '../../atoms/modalAtom';
+import { selectedUserState } from '../../atoms/modalAtom';
 import { db } from '../../firebase';
 
 function User({ user, selectUser, user1, notifications, setShowPicker }) {
@@ -41,7 +31,7 @@ function User({ user, selectUser, user1, notifications, setShowPicker }) {
 
   useEffect(async () => {
     const id = user1 > user2 ? `${user1 + user2} ` : `${user2 + user1} `;
-    if (filteredNotifications?.length !== 0) {
+    if (filteredNotifications?.length !== 0 && selectedChat.uid === user2) {
       const docSnap = await getDoc(doc(db, 'lastMsg', id));
       if (docSnap.data() && docSnap.data().from !== user1) {
         await updateDoc(doc(db, 'lastMsg', id), {

@@ -38,7 +38,6 @@ export default function Home({ user }) {
   useEffect(() => {
     const lastMsgsRef = collection(db, 'lastMsg');
     const q = query(lastMsgsRef, where('unread', '==', true));
-    console.log(q);
     const unsub = onSnapshot(q, (querySnapshot) => {
       let notifications = [];
       querySnapshot.forEach((doc) => {

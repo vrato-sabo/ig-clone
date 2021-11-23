@@ -66,7 +66,7 @@ function MessageForm({
         <EmojiPicker handler={(e) => addToText(e.currentTarget.innerHTML)} />
       )}
 
-      <div className='flex justify-end flex-col flex-1 overflow-y-auto scrollbar-hide '>
+      <div className='flex bg-white justify-end flex-col flex-1 overflow-y-auto scrollbar-hide '>
         {(msgs.length && selectedChat.uid === msgs[0]?.to) ||
         selectedChat.uid === msgs[0]?.from ? (
           msgs.map((msg, i) => <Message key={i} msg={msg} user1={user1} />)
