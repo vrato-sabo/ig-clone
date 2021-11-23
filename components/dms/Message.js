@@ -35,7 +35,7 @@ function Message({ msg, user1 }) {
         <div
           className={
             msg.from === user1
-              ? 'bg-gray-200 max-w-xxs rounded-3xl py-3 px-4 break-words text-sm smd:max-w-xs'
+              ? ' bg-gray-200 max-w-xxs rounded-3xl py-3 px-4 break-words text-sm smd:max-w-xs'
               : 'bg-white border max-w-xxs border-gray-200 rounded-3xl py-3 px-4 break-words text-sm'
           }>
           {msg.text}

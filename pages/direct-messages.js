@@ -1,4 +1,4 @@
-import { getSession, useSession } from 'next-auth/react';
+import { getSession, signOut, useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import SubHeader from '../components/dms/SubHeader';
 import Users from '../components/dms/Users';
@@ -6,7 +6,6 @@ import Header from '../components/Header';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
 import Modal from '../components/Modal';
-import SelectChatModal from '../components/dms/SelectChatModal';
 import FullImageModal from '../components/dms/FullImageModal';
 
 function DirectMessages({ user }) {
@@ -31,7 +30,6 @@ function DirectMessages({ user }) {
   useEffect(() => {
     const lastMsgsRef = collection(db, 'lastMsg');
     const q = query(lastMsgsRef, where('unread', '==', true));
-    console.log(q);
     const unsub = onSnapshot(q, (querySnapshot) => {
       let notifications = [];
       querySnapshot.forEach((doc) => {
@@ -52,7 +50,6 @@ function DirectMessages({ user }) {
         <Users currentUser={user} users={users} notifications={notifications} />
       </section>
       <Modal />
-      {/* <SelectChatModal users={users} /> */}
       <FullImageModal />
     </div>
   );
@@ -63,10 +60,14 @@ export default DirectMessages;
 export async function getServerSideProps(context) {
   const session = await getSession(context);
   if (!session) {
-    context.res.writeHead(302, { Location:  process.env.NEXTAUTH_URL});
+    // context.res.writeHead(302, { Location: '/' });
+    // context.res.end();
+
+    // return null;
     return {
-      props: {
-        user: null,
+      redirect: {
+        destination: '/',
+        permanent: false,
       },
     };
   }
