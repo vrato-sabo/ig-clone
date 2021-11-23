@@ -31,7 +31,7 @@ function User({ user, selectUser, user1, notifications, setShowPicker }) {
 
   useEffect(async () => {
     const id = user1 > user2 ? `${user1 + user2} ` : `${user2 + user1} `;
-    if (filteredNotifications?.length !== 0 && selectedChat.uid === user2) {
+    if (filteredNotifications?.length !== 0 && selectedChat.uid === user2 && selectedChat !== null) {
       const docSnap = await getDoc(doc(db, 'lastMsg', id));
       if (docSnap.data() && docSnap.data().from !== user1) {
         await updateDoc(doc(db, 'lastMsg', id), {
