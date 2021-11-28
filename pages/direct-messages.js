@@ -1,5 +1,9 @@
 import { getSession, signOut, useSession } from 'next-auth/react';
+<<<<<<< HEAD
 import { useEffect, useRef, useState } from 'react';
+=======
+import { useEffect, useState } from 'react';
+>>>>>>> 6085a30ab12daa770ed9d55ac44932e8d4eb2c22
 import SubHeader from '../components/dms/SubHeader';
 import Users from '../components/dms/Users';
 import Header from '../components/Header';
@@ -108,6 +112,13 @@ export default DirectMessages;
 export async function getServerSideProps(context) {
   const session = await getSession(context);
   if (!session) {
+<<<<<<< HEAD
+=======
+    // context.res.writeHead(302, { Location: '/' });
+    // context.res.end();
+
+    // return null;
+>>>>>>> 6085a30ab12daa770ed9d55ac44932e8d4eb2c22
     return {
       redirect: {
         destination: '/',
