@@ -1,6 +1,6 @@
 import { useRecoilState } from 'recoil';
 import { Dialog, Transition } from '@headlessui/react';
-import { Fragment, useRef, useState } from 'react';
+import { Fragment } from 'react';
 import { useSession } from 'next-auth/react';
 import { fullImageState, imgUrlForModalState } from '../../atoms/modalAtom';
 import { XIcon } from '@heroicons/react/outline';

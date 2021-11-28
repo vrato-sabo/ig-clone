@@ -55,7 +55,6 @@ export default function Home({ user }) {
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <Header notifications={notifications} user1={user?.uid} />
-      {/* <div>{user.username}</div> */}
       <Feed />
       <Modal />
       <DetailModal />

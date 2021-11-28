@@ -4,7 +4,14 @@ import { useRecoilState } from 'recoil';
 import { selectedUserState } from '../../atoms/modalAtom';
 import { db } from '../../firebase';
 
-function User({ user, selectUser, user1, notifications, setShowPicker }) {
+function User({
+  user,
+  selectUser,
+  user1,
+  notifications,
+  setShowPicker,
+  Moment,
+}) {
   const [selectedChat, setSelectedChat] = useRecoilState(selectedUserState);
 
   const user2 = user?.uid;
@@ -31,7 +38,11 @@ function User({ user, selectUser, user1, notifications, setShowPicker }) {
 
   useEffect(async () => {
     const id = user1 > user2 ? `${user1 + user2} ` : `${user2 + user1} `;
-    if (filteredNotifications?.length !== 0 && selectedChat.uid === user2) {
+    if (
+      filteredNotifications?.length !== 0 &&
+      selectedChat.uid === user2 &&
+      selectedChat !== null
+    ) {
       const docSnap = await getDoc(doc(db, 'lastMsg', id));
       if (docSnap.data() && docSnap.data().from !== user1) {
         await updateDoc(doc(db, 'lastMsg', id), {
@@ -78,6 +89,13 @@ function User({ user, selectUser, user1, notifications, setShowPicker }) {
           ) : (
             <p className='text-sm'>{user.isOnline ? 'Active now' : null}</p>
           )}
+        </div>
+        <div>
+          {data !== undefined ? (
+            <Moment className='text-xxs ml-3' fromNow>
+              {data?.createdAt?.toDate()}
+            </Moment>
+          ) : null}
         </div>
       </div>
     </div>

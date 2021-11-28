@@ -22,8 +22,9 @@ import MessageForm from './MessageForm';
 import NoSelectedChat from './NoSelectedChat';
 import User from './User';
 import SelectChatModal from './SelectChatModal';
+import Moment from 'react-moment';
 
-function Users({ users, currentUser, notifications }) {
+function Users({ users, currentUser, notifications, setUsers }) {
   const [selectedChat, setSelectedChat] = useRecoilState(selectedUserState);
   const [imgMessage, setImgMessage] = useRecoilState(imgUrlForMessageState);
   const [chat, setChat] = useState('');
@@ -93,14 +94,12 @@ function Users({ users, currentUser, notifications }) {
         media: url || '',
         unread: true,
       });
+
       setText('');
       setImg('');
-      console.log('handlesubmit');
     }
   };
   const differentFunction = async () => {
-    console.log(imgMessage?.type, 'type of imgmessaage');
-
     if (!imgMessage?.type?.includes('image')) {
       return;
     } else {
@@ -149,6 +148,7 @@ function Users({ users, currentUser, notifications }) {
         }>
         {users.map((user) => (
           <User
+            Moment={Moment}
             key={user.uid}
             user={user}
             selectUser={selectUser}

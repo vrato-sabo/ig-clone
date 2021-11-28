@@ -34,6 +34,9 @@ module.exports = {
         xxs: '15rem',
         '10rem': '10rem',
       },
+      fontSize: {
+        xxs: '.65rem',
+      },
     },
   },
   variants: {

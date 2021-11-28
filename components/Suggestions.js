@@ -20,7 +20,7 @@ function Suggestions() {
         <div key={id} className='flex items-center justify-between mt-3'>
           <img
             src={avatar}
-            alt='pic'
+            alt=''
             className='w-10 h-10 rounded-full border p-[2px]'
           />
           <div className='flex-1 ml-4'>
